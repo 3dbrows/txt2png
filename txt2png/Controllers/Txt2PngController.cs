@@ -26,6 +26,8 @@ namespace txt2png.Controllers
                 UseMonochrome = true,
                 TextEncoding = Encoding.UTF8
             };
+            input = input.Replace("%", "%%");
+            input = input.Replace("\\", "\\\\");
             using var caption = new MagickImage($"caption:{input}", settings) {Format = MagickFormat.Png8};
             caption.Strip();
             return caption.ToByteArray();

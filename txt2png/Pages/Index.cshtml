@@ -22,7 +22,7 @@
                     alert('Input is blank.');
                     return;
                 }
-                var url = '/txt2png?input=' + $('#Input').val() + '&background=' + $('#Background:checked').val();
+                var url = '/txt2png?input=' + encodeURIComponent($('#Input').val()) + '&background=' + $('#Background:checked').val();
                 $.get(url,
                     function(data) {
                         $('#image').attr('src', 'data:image/png;base64,' + data);
