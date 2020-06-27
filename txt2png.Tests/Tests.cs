@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace txt2png.Tests
@@ -25,19 +26,43 @@ namespace txt2png.Tests
             _httpClient = factory.CreateClient();
         }
 
-        [Theory]
-        [InlineData(TestUriForTransparentBackground, TextPlain, TextPlain, Constants.Base64OutputForTransparentBackground)]
-        [InlineData(TestUriForWhiteBackground,       TextPlain, TextPlain, Constants.Base64OutputForWhiteBackground)]
-        [InlineData(TestUriForBlackBackground,       TextPlain, TextPlain, Constants.Base64OutputForBlackBackground)]
-        [InlineData(TestUriForPunctuation,           TextPlain, TextPlain, Constants.Base64OutputForPunctuation)]
-        [InlineData(TestUriForRiverCrab,             TextPlain, TextPlain, Constants.Base64OutputForRiverCrab)]
-        [InlineData(TestUriForTransparentBackground, ImagePng,  ImagePng,  Constants.Base64OutputForTransparentBackground)]
-        [InlineData(TestUriForWhiteBackground,       ImagePng,  ImagePng,  Constants.Base64OutputForWhiteBackground)]
-        [InlineData(TestUriForBlackBackground,       ImagePng,  ImagePng,  Constants.Base64OutputForBlackBackground)]
-        [InlineData(TestUriForRiverCrab,             ImagePng,  ImagePng,  Constants.Base64OutputForRiverCrab)]
-        [InlineData(TestUriForTransparentBackground, "*/*",     ImagePng,  Constants.Base64OutputForTransparentBackground)]
-        [InlineData(TestUriForWhiteBackground,       "foo/bar", ImagePng,  Constants.Base64OutputForWhiteBackground)]
-        internal async void Get_ReturnsExpectedContentType_ForAcceptHeader(string url, string acceptHeader,
+        [WindowsTheory]
+        [InlineData(TestUriForTransparentBackground, TextPlain, TextPlain, WindowsTestConstants.Base64OutputForTransparentBackground)]
+        [InlineData(TestUriForWhiteBackground,       TextPlain, TextPlain, WindowsTestConstants.Base64OutputForWhiteBackground)]
+        [InlineData(TestUriForBlackBackground,       TextPlain, TextPlain, WindowsTestConstants.Base64OutputForBlackBackground)]
+        [InlineData(TestUriForPunctuation,           TextPlain, TextPlain, WindowsTestConstants.Base64OutputForPunctuation)]
+        [InlineData(TestUriForRiverCrab,             TextPlain, TextPlain, WindowsTestConstants.Base64OutputForRiverCrab)]
+        [InlineData(TestUriForTransparentBackground, ImagePng,  ImagePng,  WindowsTestConstants.Base64OutputForTransparentBackground)]
+        [InlineData(TestUriForWhiteBackground,       ImagePng,  ImagePng,  WindowsTestConstants.Base64OutputForWhiteBackground)]
+        [InlineData(TestUriForBlackBackground,       ImagePng,  ImagePng,  WindowsTestConstants.Base64OutputForBlackBackground)]
+        [InlineData(TestUriForRiverCrab,             ImagePng,  ImagePng,  WindowsTestConstants.Base64OutputForRiverCrab)]
+        [InlineData(TestUriForTransparentBackground, "*/*",     ImagePng,  WindowsTestConstants.Base64OutputForTransparentBackground)]
+        [InlineData(TestUriForWhiteBackground,       "foo/bar", ImagePng,  WindowsTestConstants.Base64OutputForWhiteBackground)]
+        internal async void Windows_Get_ReturnsExpectedContentType_ForAcceptHeader(string url, string acceptHeader,
+            string expectedContentType, string expectedB64)
+        {
+            await Test(url, acceptHeader, expectedContentType, expectedB64);
+        }
+
+        [LinuxTheory]
+        [InlineData(TestUriForTransparentBackground, TextPlain, TextPlain, LinuxTestConstants.Base64OutputForTransparentBackground)]
+        [InlineData(TestUriForWhiteBackground,       TextPlain, TextPlain, LinuxTestConstants.Base64OutputForWhiteBackground)]
+        [InlineData(TestUriForBlackBackground,       TextPlain, TextPlain, LinuxTestConstants.Base64OutputForBlackBackground)]
+        [InlineData(TestUriForPunctuation,           TextPlain, TextPlain, LinuxTestConstants.Base64OutputForPunctuation)]
+        [InlineData(TestUriForRiverCrab,             TextPlain, TextPlain, LinuxTestConstants.Base64OutputForRiverCrab)]
+        [InlineData(TestUriForTransparentBackground, ImagePng,  ImagePng,  LinuxTestConstants.Base64OutputForTransparentBackground)]
+        [InlineData(TestUriForWhiteBackground,       ImagePng,  ImagePng,  LinuxTestConstants.Base64OutputForWhiteBackground)]
+        [InlineData(TestUriForBlackBackground,       ImagePng,  ImagePng,  LinuxTestConstants.Base64OutputForBlackBackground)]
+        [InlineData(TestUriForRiverCrab,             ImagePng,  ImagePng,  LinuxTestConstants.Base64OutputForRiverCrab)]
+        [InlineData(TestUriForTransparentBackground, "*/*",     ImagePng,  LinuxTestConstants.Base64OutputForTransparentBackground)]
+        [InlineData(TestUriForWhiteBackground,       "foo/bar", ImagePng,  LinuxTestConstants.Base64OutputForWhiteBackground)]
+        internal async void Linux_Get_ReturnsExpectedContentType_ForAcceptHeader(string url, string acceptHeader,
+            string expectedContentType, string expectedB64)
+        {
+            await Test(url, acceptHeader, expectedContentType, expectedB64);
+        }
+
+        private async Task Test(string url, string acceptHeader,
             string expectedContentType, string expectedB64)
         {
             var expectedBytes = expectedContentType == TextPlain
@@ -45,7 +70,7 @@ namespace txt2png.Tests
                 : Convert.FromBase64String(expectedB64);
 
             var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, url)
-                {Headers = {Accept = {new MediaTypeWithQualityHeaderValue(acceptHeader)}}});
+                { Headers = { Accept = { new MediaTypeWithQualityHeaderValue(acceptHeader) } } });
             Assert.True(response.IsSuccessStatusCode);
             Assert.Equal(expectedContentType, response.Content.Headers.ContentType.ToString());
             Assert.Equal(expectedBytes.Length, response.Content.Headers.ContentLength);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 using System.Text;
 using ImageMagick;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,10 @@ namespace txt2png.Controllers
     [Route("[controller]/v{version:apiVersion}")]
     public class Txt2PngController : Controller
     {
+        public static string Font => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? "Microsoft YaHei & Microsoft YaHei UI"
+            : "WenQuanYi Zen Hei Mono";
+
         /// <summary>
         ///     Creates a PNG image from the given input text.
         /// </summary>
@@ -36,7 +41,7 @@ namespace txt2png.Controllers
 
             var settings = new MagickReadSettings
             {
-                FontFamily = "WenQuanYi Zen Hei Mono",
+                FontFamily = Font,
                 FontPointsize = 18,
                 TextGravity = Gravity.West,
                 BackgroundColor = backgroundColor,
