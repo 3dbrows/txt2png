@@ -36,7 +36,7 @@ namespace txt2png.Controllers
 
             var settings = new MagickReadSettings
             {
-                FontFamily = "Microsoft YaHei & Microsoft YaHei UI",
+                FontFamily = "WenQuanYi Zen Hei Mono",
                 FontPointsize = 18,
                 TextGravity = Gravity.West,
                 BackgroundColor = backgroundColor,
