@@ -6,9 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using txt2png.Filters;
 
-namespace txt2png
+namespace txt2png.Swagger
 {
     internal class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {

@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using txt2png.Filters;
 using txt2png.Formatters;
+using txt2png.Swagger;
 
 namespace txt2png
 {
