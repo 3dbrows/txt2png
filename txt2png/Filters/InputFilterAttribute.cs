@@ -8,7 +8,6 @@ namespace txt2png.Filters
     public class InputFilterAttribute : Attribute, IResourceFilter
     {
         private const string InputQueryParamKey = "input";
-        private const string Txt2PngPath = "/txt2png";
         private readonly InputOptions _settings;
 
         public InputFilterAttribute(IOptions<InputOptions> options)
@@ -18,8 +17,7 @@ namespace txt2png.Filters
 
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
-            if (context.HttpContext.Request.Path == Txt2PngPath
-                && context.HttpContext.Request.Query.TryGetValue(InputQueryParamKey, out var input)
+            if (context.HttpContext.Request.Query.TryGetValue(InputQueryParamKey, out var input)
                 && IsAcceptableInput(input))
                 return;
             context.Result = new BadRequestResult();
