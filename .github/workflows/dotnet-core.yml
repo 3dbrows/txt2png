@@ -1,4 +1,4 @@
-name: .NET Core
+name: .NET Core Tests
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
         dotnet-version: 3.1.301
     - name: Test
       run: |
-        dotnet test --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
+        dotnet test --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile=**/Swagger/*.cs
         move txt2png.Tests/TestResults/*/coverage.info .
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.1.1

@@ -4,3 +4,5 @@
 **/obj
 */Properties/PublishProfiles
 */.config
+txt2png.Tests/TestResults
+**/coverage.info
